@@ -40,6 +40,11 @@ namespace Deal.DeveloperEvaluation.WebApi.Database
                             var guidValue = Guid.Parse(value.ToString()!);
                             query = query.Where(x => EF.Property<Guid>(x, kv.Key) == guidValue);
                         }
+                        else if (property.PropertyType == typeof(Sku) && value != null)
+                        {
+                            var skuValue = new Sku(value.ToString()!);
+                            query = query.Where(x => EF.Property<Sku>(x, kv.Key).Value == skuValue.Value);
+                        }
                         else
                         {
                             query = query.Where(x => EF.Property<string>(x, kv.Key) == value!.ToString());

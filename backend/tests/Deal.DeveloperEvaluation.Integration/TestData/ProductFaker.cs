@@ -30,6 +30,17 @@ namespace Deal.DeveloperEvaluation.Integration.TestData
 
             return faker.Generate();
         }
+        public static CreateProductRequest GenerateFakeCreateProductRequest(string productCode)
+        {
+            var faker = new Faker<CreateProductRequest>()
+                .CustomInstantiator(f => new CreateProductRequest(
+                    f.Commerce.ProductName(),
+                    productCode,
+                    decimal.Parse(f.Commerce.Price(10, 200))
+                ));
+
+            return faker.Generate();
+        }
 
 
         public static UpdateProductRequest GenerateFakeUpdateProductRequest(Guid id)

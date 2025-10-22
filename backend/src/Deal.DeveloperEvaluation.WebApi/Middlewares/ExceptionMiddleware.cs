@@ -1,4 +1,6 @@
 ﻿using Deal.DeveloperEvaluation.WebApi.Dtos;
+using Deal.DeveloperEvaluation.WebApi.UseCases;
+using FluentValidation;
 using System.Text.Json;
 
 namespace Deal.DeveloperEvaluation.WebApi.Middleware
@@ -18,7 +20,25 @@ namespace Deal.DeveloperEvaluation.WebApi.Middleware
             {
                 await _next(context);
             }
+            catch (ExistsProductCodeException ex)
+            {
+                var response = new ApiResponse
+                {
+                    Success = false,
+                    Message = ex.Message
+                };
+                await HandleExceptionAsync(context, ex, StatusCodes.Status400BadRequest, response);
+            }
             catch (InvalidOperationException ex)
+            {
+                var response = new ApiResponse
+                {
+                    Success = false,
+                    Message = ex.Message
+                };
+                await HandleExceptionAsync(context, ex, StatusCodes.Status400BadRequest, response);
+            }
+            catch (ValidationException ex)
             {
                 var response = new ApiResponse
                 {

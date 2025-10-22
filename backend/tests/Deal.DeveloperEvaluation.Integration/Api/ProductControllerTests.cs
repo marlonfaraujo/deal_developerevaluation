@@ -1,4 +1,5 @@
-﻿using Deal.DeveloperEvaluation.Integration.TestData;
+﻿using Bogus;
+using Deal.DeveloperEvaluation.Integration.TestData;
 using System.Net;
 using System.Net.Http.Json;
 
@@ -70,6 +71,22 @@ namespace Deal.DeveloperEvaluation.Integration.Api
             var response = await _productApiFixture.Client.DeleteAsync($"/api/product/{_productApiFixture.ProductId}");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+
+        /// <summary>
+        /// Checks whether creating a new product via POST returns HTTP 400 Bad Request when duplicating the product code.
+        /// </summary>
+        [Fact(DisplayName = "POST /api/products should return Bad Request when duplicating the product code")]
+        public async Task CreateExistsProductCode_ReturnsBadRequest()
+        {
+            var productRequest = ProductFaker.GenerateFakeCreateProductRequest();
+            var response = await _productApiFixture.Client.PostAsJsonAsync("/api/product", productRequest);
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+            var existsProductRequest = ProductFaker.GenerateFakeCreateProductRequest(productRequest.Code);
+            var existsResponse = await _productApiFixture.Client.PostAsJsonAsync("/api/product", existsProductRequest);
+            Assert.Equal(HttpStatusCode.BadRequest, existsResponse.StatusCode);
         }
     }
 }
