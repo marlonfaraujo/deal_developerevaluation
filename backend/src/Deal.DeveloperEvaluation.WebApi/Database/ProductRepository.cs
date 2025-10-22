@@ -28,7 +28,9 @@ namespace Deal.DeveloperEvaluation.WebApi.Database
 
         public async Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _context.Products.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            return await _context.Products
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 
         public async Task<Product?> UpdateAsync(Product product, CancellationToken cancellationToken = default)
@@ -44,6 +46,17 @@ namespace Deal.DeveloperEvaluation.WebApi.Database
             _context.Entry(product).State = EntityState.Modified;
             await _context.SaveChangesAsync(cancellationToken);
             return product;
+        }
+        public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            var product = await _context.Products.FindAsync(new object[] { id }, cancellationToken);
+            if (product == null)
+                return false;
+
+            _context.Products.Remove(product);
+
+            await _context.SaveChangesAsync(cancellationToken);
+            return true;
         }
     }
 }
