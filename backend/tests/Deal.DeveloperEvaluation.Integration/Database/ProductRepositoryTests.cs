@@ -1,6 +1,7 @@
 ﻿using Deal.DeveloperEvaluation.Integration.TestData;
 using Deal.DeveloperEvaluation.WebApi;
 using Deal.DeveloperEvaluation.WebApi.Database;
+using Deal.DeveloperEvaluation.WebApi.Dtos;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Deal.DeveloperEvaluation.Integration.Database
@@ -96,11 +97,12 @@ namespace Deal.DeveloperEvaluation.Integration.Database
             await repository.AddAsync(product1);
             await repository.AddAsync(product2);
 
-            var result = await repository.GetAsync();
+            var result = await repository.GetAsync(new QueryOptions());
 
             Assert.NotNull(result);
-            Assert.Contains(result, p => p.Id == product1.Id);
-            Assert.Contains(result, p => p.Id == product2.Id);
+            Assert.NotNull(result.Items);
+            Assert.Contains(result.Items, p => p.Id == product1.Id);
+            Assert.Contains(result.Items, p => p.Id == product2.Id);
         }
 
         [Fact(DisplayName = "Should return equal when updating product name")]
