@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  deal.developerevaluation.webapi:
+    build:
+      context: .
+      dockerfile: ./backend/src/Deal.DeveloperEvaluation.WebApi/Dockerfile
+    container_name: deal_developerevaluation_webapi
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
