@@ -11,7 +11,6 @@
 
         public Product(string name, string code, decimal price)
         {
-            Id = Guid.NewGuid();
             Name = new ProductName(name);
             Code = new Sku(code);
             Price = new Money(price);
