@@ -24,5 +24,10 @@
 
             Price = newPriceMoney;
         }
+
+        public void ChangeName(string newName)
+        {
+            Name = new ProductName(newName);
+        }
     }
 }
