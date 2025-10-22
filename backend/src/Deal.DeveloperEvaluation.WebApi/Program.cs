@@ -1,5 +1,6 @@
 using Deal.DeveloperEvaluation.WebApi.Database;
 using Deal.DeveloperEvaluation.WebApi.Dtos;
+using Deal.DeveloperEvaluation.WebApi.Middleware;
 using Deal.DeveloperEvaluation.WebApi.Repositories;
 using Deal.DeveloperEvaluation.WebApi.UseCases.CreateProduct;
 using Deal.DeveloperEvaluation.WebApi.UseCases.DeleteProduct;
@@ -26,8 +27,14 @@ public partial class Program
         });
         builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<DefaultContext>());
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
+        builder.Services.AddScoped<CreateProduct>();
+        builder.Services.AddScoped<DeleteProduct>();
+        builder.Services.AddScoped<GetProductById>();
+        builder.Services.AddScoped<ListProduct>();
+        builder.Services.AddScoped<UpdateProduct>();
 
         var app = builder.Build();
+        app.UseMiddleware<ExceptionMiddleware>();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -89,7 +96,6 @@ public partial class Program
                 Message = "Product deleted successfully"
             });
         });
-
 
         return app;
     }
