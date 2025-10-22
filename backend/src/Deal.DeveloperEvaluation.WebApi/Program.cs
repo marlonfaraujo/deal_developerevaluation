@@ -65,10 +65,10 @@ public partial class Program
             });
         });
 
-        app.MapGet("/api/product", async (ListProduct listProduct, CancellationToken cancellationToken) =>
+        app.MapGet("/api/product", async ([AsParameters] ListProductRequest request, ListProduct listProduct, CancellationToken cancellationToken) =>
         {
-            var response = await listProduct.ExecuteAsync(cancellationToken);
-            return Results.Ok(new ApiResponseWithData<IEnumerable<ListProductResult>>
+            var response = await listProduct.ExecuteAsync(request, cancellationToken);
+            return Results.Ok(new ApiResponseWithData<ListProductResult>
             {
                 Success = true,
                 Message = "Products retrieved successfully",

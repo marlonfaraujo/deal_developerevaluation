@@ -45,7 +45,6 @@ namespace Deal.DeveloperEvaluation.Integration.Api
         [Fact(DisplayName = "GET /api/products/{id} should return Ok when product exists")]
         public async Task GetProduct_ReturnsOk()
         {
-
             var response = await _productApiFixture.Client.GetAsync($"/api/product/{_productApiFixture.ProductId}");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
