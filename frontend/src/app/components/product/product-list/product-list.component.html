@@ -1,0 +1,40 @@
+<po-page-default p-title="Lista de Produtos" [p-actions]="actions">
+  <div class="po-md-12 po-mt-5">
+    <div class="po-row po-mb-3 po-mt-5">
+      <div class="po-sm-6">
+        <po-input
+          name="searchName"
+          p-label="Pesquisar por nome"
+          [(ngModel)]="searchName">
+        </po-input>
+      </div>
+
+      <div class="po-sm-6">
+        <po-input
+          name="searchCode"
+          p-label="Pesquisar por código"
+          [(ngModel)]="searchCode">
+        </po-input>
+      </div>
+    </div>
+    <div class="po-row po-mb-3">
+      <po-button
+          p-label="Pesquisar"
+          (p-click)="search()">
+      </po-button>
+    </div>
+
+  </div>
+
+  <po-table 
+    [p-columns]="columns" 
+    [p-items]="filteredProducts()"
+    [p-actions]="tableActions"
+    [p-loading]="loading"
+    [p-sort]="true"
+    [p-show-more-disabled]="totalItems <= products.length"
+    (p-show-more)="onShowMore()"
+    (p-sort-by)="onSortChange($event)"
+    [p-hide-columns-manager]="true">
+  </po-table>
+</po-page-default> 
