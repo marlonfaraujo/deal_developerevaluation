@@ -1,0 +1,7 @@
+{
+  "name": "Angular Dev Container",
+	"dockerComposeFile": "../docker-compose.yml",
+  "workspaceFolder": "/workspace",
+	"service": "deal.developerevaluation.spa",
+  "remoteUser": "node"
+}
