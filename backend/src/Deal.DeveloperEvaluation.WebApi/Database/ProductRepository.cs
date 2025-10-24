@@ -2,7 +2,7 @@
 using Deal.DeveloperEvaluation.WebApi.Entities;
 using Deal.DeveloperEvaluation.WebApi.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using System.Linq.Expressions;
 
 namespace Deal.DeveloperEvaluation.WebApi.Database
 {
@@ -40,6 +40,11 @@ namespace Deal.DeveloperEvaluation.WebApi.Database
                             var guidValue = Guid.Parse(value.ToString()!);
                             query = query.Where(x => EF.Property<Guid>(x, kv.Key) == guidValue);
                         }
+                        else if (property.PropertyType == typeof(ProductName) && value != null)
+                        {
+                            var nameValue = new ProductName(value.ToString()!);
+                            query = query.Where(x => EF.Property<ProductName>(x, kv.Key).Value == nameValue.Value);
+                        }
                         else if (property.PropertyType == typeof(Sku) && value != null)
                         {
                             var skuValue = new Sku(value.ToString()!);
@@ -53,18 +58,7 @@ namespace Deal.DeveloperEvaluation.WebApi.Database
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(options.SortBy))
-            {
-                var property = typeof(Product).GetProperty(options.SortBy);
-                if (property != null)
-                {
-                    if (options.SortDescending)
-                        query = query.OrderByDescending(x => EF.Property<object>(x, options.SortBy));
-                    else
-                        query = query.OrderBy(x => EF.Property<object>(x, options.SortBy));
-                }
-            }
-
+            query = GetOrderedBy(query, options);
             var totalCount = await query.CountAsync(cancellationToken);
             var items = await query
                 .Skip((options.Page - 1) * options.PageSize)
@@ -78,6 +72,37 @@ namespace Deal.DeveloperEvaluation.WebApi.Database
                 Page = options.Page,
                 PageSize = options.PageSize
             };
+        }
+
+        private IQueryable<Product> GetOrderedBy(IQueryable<Product> query, QueryOptions options)
+        {
+            if (string.IsNullOrWhiteSpace(options.SortBy))
+            {
+                return query;
+            }
+            var propertyInfo = typeof(Product).GetProperty(options.SortBy);
+            if (propertyInfo == null)
+            {
+                return query;
+            }
+
+            var valueObjectMap = new Dictionary<string, Expression<Func<Product, object>>>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "Name", p => p.Name.Value },
+                { "Code", p => p.Code.Value },
+                { "Price", p => p.Price.Value }
+            };
+
+            if (valueObjectMap.TryGetValue(options.SortBy, out var keySelector))
+            {
+                return options.SortDescending
+                    ? query.OrderByDescending(keySelector)
+                    : query.OrderBy(keySelector);
+            }
+
+            return options.SortDescending
+                ? query.OrderByDescending(p => EF.Property<object>(p, propertyInfo.Name))
+                : query.OrderBy(p => EF.Property<object>(p, propertyInfo.Name));
         }
 
         public async Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
