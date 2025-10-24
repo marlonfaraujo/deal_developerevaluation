@@ -11,16 +11,16 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/Deal.DeveloperEvaluation.WebApi/Deal.DeveloperEvaluation.WebApi.csproj", "src/Deal.DeveloperEvaluation.WebApi/"]
-RUN dotnet restore "./src/Deal.DeveloperEvaluation.WebApi/Deal.DeveloperEvaluation.WebApi.csproj"
+COPY ["backend/src/Deal.DeveloperEvaluation.WebApi/Deal.DeveloperEvaluation.WebApi.csproj", "backend/src/Deal.DeveloperEvaluation.WebApi/"]
+RUN dotnet restore "backend/src/Deal.DeveloperEvaluation.WebApi/Deal.DeveloperEvaluation.WebApi.csproj"
 COPY . .
-WORKDIR "/src/src/Deal.DeveloperEvaluation.WebApi"
-RUN dotnet build "./Deal.DeveloperEvaluation.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/backend/src/Deal.DeveloperEvaluation.WebApi"
+RUN dotnet build "Deal.DeveloperEvaluation.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Deal.DeveloperEvaluation.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Deal.DeveloperEvaluation.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final

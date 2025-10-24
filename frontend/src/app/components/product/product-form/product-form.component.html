@@ -1,0 +1,45 @@
+<po-page-default [p-title]="isEditMode ? 'Editar Produto' : 'Novo Produto'"> 
+
+    <div class="po-md-6 po-xs-12 po-mt-5">
+
+        <form [formGroup]="form" (ngSubmit)="save()">
+            <div>
+                <po-loading-overlay [hidden]="isHideLoading"></po-loading-overlay>
+            </div>
+
+            <po-input
+                formControlName="code"
+                p-label="Código do Produto"
+                p-required="true">
+            </po-input>
+
+            <po-input
+                formControlName="name"
+                p-label="Nome do Produto"
+                p-required="true">
+            </po-input>
+            
+            <po-decimal formControlName="price" name="price" p-label="Preço" p-required="true"> </po-decimal>
+
+            <div class="po-form-actions">
+                <po-button
+                    p-label="Salvar"
+                    [p-disabled]="form.invalid || !isHideLoading"
+                    p-kind="primary"
+                    type="submit"
+                    (p-click)="save()">
+                </po-button>
+
+                <po-button
+                    p-label="Cancelar"
+                    type="button"
+                    (p-click)="cancel()">
+                </po-button>
+            </div>
+
+        </form>
+    </div>
+    <div class="po-row">
+        <po-toaster class="po-md-12" [p-message]="toasterProperties.message" [p-type]="toasterProperties.type" [p-hide]="toasterProperties.hide"></po-toaster>
+    </div>
+</po-page-default>

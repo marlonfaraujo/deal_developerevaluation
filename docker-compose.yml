@@ -11,3 +11,17 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
 
+  deal.developerevaluation.spa:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    container_name: deal_developerevaluation_spa
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./:/workspace
+    depends_on:
+      - deal.developerevaluation.webapi
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - API_URL=http://deal.developerevaluation.webapi:8080
