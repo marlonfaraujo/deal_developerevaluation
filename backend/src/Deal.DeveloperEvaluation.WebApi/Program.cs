@@ -32,7 +32,8 @@ public partial class Program
         builder.Services.AddScoped<GetProductById>();
         builder.Services.AddScoped<ListProduct>();
         builder.Services.AddScoped<UpdateProduct>();
-
+        
+        builder.Services.AddCors();
         var app = builder.Build();
         app.UseMiddleware<ExceptionMiddleware>();
 
@@ -41,6 +42,11 @@ public partial class Program
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
         }
 
         app.MapPost("/api/product", async (CreateProductRequest request, CreateProduct createProduct, CancellationToken cancellationToken) =>
