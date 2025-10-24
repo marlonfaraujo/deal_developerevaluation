@@ -88,5 +88,25 @@ namespace Deal.DeveloperEvaluation.Integration.Api
             var existsResponse = await _productApiFixture.Client.PostAsJsonAsync("/api/product", existsProductRequest);
             Assert.Equal(HttpStatusCode.BadRequest, existsResponse.StatusCode);
         }
+
+        /// <summary>
+        /// Verifies that listing products via GET returns HTTP 200 OK and a valid response.
+        /// </summary>
+        [Fact(DisplayName = "GET /api/products should return Ok and products list sortBy Price")]
+        public async Task Get_Products_ReturnsOkAndProductsListByName()
+        {
+            var productRequest = ProductFaker.GenerateFakeCreateProductRequest();
+            var response = await _productApiFixture.Client.PostAsJsonAsync("/api/product", productRequest);
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+            var query = $"?pageNumber=1&pageSize=10&sortBy=Price&sortDirection=desc";
+            // Act
+            var getResponse = await _productApiFixture.Client.GetAsync($"/api/product{query}");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
+            var content = await getResponse.Content.ReadAsStringAsync();
+            Assert.False(string.IsNullOrWhiteSpace(content));
+        }
     }
 }
