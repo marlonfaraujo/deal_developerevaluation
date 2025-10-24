@@ -24,7 +24,7 @@ namespace Deal.DeveloperEvaluation.WebApi.UseCases.GetProductById
             var product = await _repository.GetByIdAsync(request.Id, cancellationToken);
             if (product == null)
             {
-                throw new KeyNotFoundException("Product not found with id: " + request.Id.ToString());
+                throw new KeyNotFoundException("Produto não encontrado com o Id: " + request.Id.ToString());
             }
             return new GetProductByIdResult(
                     product.Id,

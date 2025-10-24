@@ -9,7 +9,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
         {
             RuleFor(product => product.Id)
                 .NotEmpty()
-                .WithMessage("Product ID is required"); ;
+                .WithMessage("Id do produto obrigatório."); ;
         }
     }
 }

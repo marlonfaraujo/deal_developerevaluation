@@ -8,7 +8,7 @@ namespace Deal.DeveloperEvaluation.WebApi.UseCases.DeleteProduct
         {
             RuleFor(product => product.Id)
                 .NotEmpty()
-                .WithMessage("Product ID is required"); ;
+                .WithMessage("Id produto obrigatório"); ;
         }
     }
 }

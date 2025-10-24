@@ -7,10 +7,10 @@
         public ProductName(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Product name cannot be empty.", nameof(value));
+                throw new ArgumentException("Nome do produto não pode ser vazio.", nameof(value));
 
             if (value.Length > 100)
-                throw new ArgumentException("Product name is too long.", nameof(value));
+                throw new ArgumentException("Nome do produto com mais de 100 caracteres.", nameof(value));
 
             Value = value.Trim();
         }

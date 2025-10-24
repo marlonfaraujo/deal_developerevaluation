@@ -7,7 +7,7 @@
         public Money(decimal value)
         {
             if (value < 0)
-                throw new ArgumentException("Money value cannot be negative.", nameof(value));
+                throw new ArgumentException("Preço com valor negativo.", nameof(value));
 
             Value = value;
         }

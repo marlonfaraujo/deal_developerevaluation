@@ -22,7 +22,7 @@ namespace Deal.DeveloperEvaluation.WebApi.UseCases.UpdateProduct
 
             var existing = await _repository.GetByIdAsync(request.Id, cancellationToken);
             if (existing == null)
-                throw new InvalidOperationException($"Product ID not found");
+                throw new InvalidOperationException($"Id do produto não encontrado");
 
             existing.ChangeName(request.Name);
             existing.ChangePrice(request.Price);

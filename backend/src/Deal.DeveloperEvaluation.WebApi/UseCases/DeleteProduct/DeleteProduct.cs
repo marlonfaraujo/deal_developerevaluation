@@ -21,7 +21,7 @@ namespace Deal.DeveloperEvaluation.WebApi.UseCases.DeleteProduct
 
             var existing = await _repository.GetByIdAsync(request.Id, cancellationToken);
             if (existing == null)
-                throw new InvalidOperationException($"Product ID not found");
+                throw new InvalidOperationException($"Produto não encontrado");
 
             await _repository.DeleteAsync(existing.Id, cancellationToken);
         }

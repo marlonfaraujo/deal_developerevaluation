@@ -8,17 +8,17 @@ namespace Deal.DeveloperEvaluation.WebApi.UseCases.CreateProduct
         {
             RuleFor(product => product.Name)
                 .NotEmpty()
-                .WithMessage("Product name is required.");
+                .WithMessage("Nome do produto é obrigatório.");
 
             RuleFor(product => product.Code)
                 .NotEmpty()
-                .WithMessage("Product code is required.");
+                .WithMessage("Código do produto é obrigatório.");
 
             RuleFor(product => product.Price)
                 .NotEmpty()
-                .WithMessage("Product price is required.")
+                .WithMessage("Preço do produto é obrigatório.")
                 .GreaterThan(0)
-                .WithMessage("Product price must be greater than zero.");
+                .WithMessage("Preço do produto menor que zero.");
         }
     }
 }

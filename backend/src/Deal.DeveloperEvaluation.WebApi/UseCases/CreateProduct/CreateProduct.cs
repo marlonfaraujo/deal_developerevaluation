@@ -28,7 +28,7 @@ namespace Deal.DeveloperEvaluation.WebApi.UseCases.CreateProduct
             };
             var existsProductCode = await _repository.GetAsync(queryOptions, cancellationToken);
             if (existsProductCode.Items.Any())
-                throw new ValidationException($"Product with code '{request.Code}' already exists.");
+                throw new ValidationException($"Produto com código '{request.Code}' já existe.");
 
             var product = new Product(request.Name, request.Code, request.Price);
             var result = await _repository.AddAsync(product);

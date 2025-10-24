@@ -7,7 +7,7 @@
         public Sku(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("SKU cannot be empty.", nameof(value));
+                throw new ArgumentException("Código de produto não pode ser vazio.", nameof(value));
 
             Value = value.Trim().ToUpperInvariant();
         }
