@@ -58,7 +58,12 @@ public partial class Program
                 Message = "Product created successfully",
                 Data = response
             });
-        });
+        })
+        .WithTags("Product")
+        .WithSummary("Cadastro de produtos")
+        .WithDescription("Permite o cadastramento de produtos.")
+        .Produces<ApiResponseWithData<CreateProductResult>>(StatusCodes.Status201Created)
+        .Produces<ApiResponse>(StatusCodes.Status400BadRequest);
 
         app.MapPut("/api/product/{id}", async (Guid id, UpdateProductRequest request, UpdateProduct updateProduct, CancellationToken cancellationToken) =>
         {
@@ -69,7 +74,12 @@ public partial class Program
                 Message = "Product updated successfully",
                 Data = response
             });
-        });
+        })
+        .WithTags("Product")
+        .WithSummary("Atualização de produtos")
+        .WithDescription("Permite a atualização de produtos.")
+        .Produces<ApiResponseWithData<UpdateProductResult>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse>(StatusCodes.Status400BadRequest);
 
         app.MapGet("/api/product", async ([AsParameters] ListProductRequest request, ListProduct listProduct, CancellationToken cancellationToken) =>
         {
@@ -80,7 +90,11 @@ public partial class Program
                 Message = "Products retrieved successfully",
                 Data = response
             });
-        });
+        })
+        .WithTags("Product")
+        .WithSummary("Busca produtos filtrando por parâmetros de query")
+        .WithDescription("Permite buscar produtos usando filtros opcionais via query string.")
+        .Produces<ApiResponseWithData<ListProductResult>>(StatusCodes.Status200OK);
 
         app.MapGet("/api/product/{id}", async (Guid id, GetProductById getProductById, CancellationToken cancellationToken) =>
         {
@@ -91,7 +105,11 @@ public partial class Program
                 Message = "Product retrieved successfully",
                 Data = response
             });
-        });
+        })
+        .WithTags("Product")
+        .WithSummary("Busca produtos filtrando pelo id")
+        .WithDescription("Permite buscar produtos pelo id.")
+        .Produces<ApiResponseWithData<GetProductByIdResult>>(StatusCodes.Status200OK);
 
         app.MapDelete("/api/product/{id}", async (Guid id, DeleteProduct deleteProduct, CancellationToken cancellationToken) =>
         {
@@ -101,7 +119,12 @@ public partial class Program
                 Success = true,
                 Message = "Product deleted successfully"
             });
-        });
+        })
+        .WithTags("Product")
+        .WithSummary("Remove produtos pelo id")
+        .WithDescription("Permite remover produtos pelo id.")
+        .Produces<ApiResponse>(StatusCodes.Status200OK)
+        .Produces<ApiResponse>(StatusCodes.Status400BadRequest);
 
         return app;
     }
