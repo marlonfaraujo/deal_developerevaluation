@@ -29,31 +29,14 @@ namespace Deal.DeveloperEvaluation.WebApi.Database
 
             if (options.Filters != null && options.Filters.Any())
             {
+                var filterStrategyExecutor = new ProductFilterStrategyExecutor();
                 foreach (var kv in options.Filters)
                 {
                     var property = typeof(Product).GetProperty(kv.Key);
-                    if (property != null)
+                    if (property != null && kv.Value != null)
                     {
-                        var value = kv.Value;
-                        if (property.PropertyType == typeof(Guid) && value != null)
-                        {
-                            var guidValue = Guid.Parse(value.ToString()!);
-                            query = query.Where(x => EF.Property<Guid>(x, kv.Key) == guidValue);
-                        }
-                        else if (property.PropertyType == typeof(ProductName) && value != null)
-                        {
-                            var nameValue = new ProductName(value.ToString()!);
-                            query = query.Where(x => EF.Property<ProductName>(x, kv.Key).Value == nameValue.Value);
-                        }
-                        else if (property.PropertyType == typeof(Sku) && value != null)
-                        {
-                            var skuValue = new Sku(value.ToString()!);
-                            query = query.Where(x => EF.Property<Sku>(x, kv.Key).Value == skuValue.Value);
-                        }
-                        else
-                        {
-                            query = query.Where(x => EF.Property<string>(x, kv.Key) == value!.ToString());
-                        }
+                        filterStrategyExecutor.SetFilterStrategy(ProductFilterStrategyFactory.Create(property.PropertyType));
+                        query = filterStrategyExecutor.ExecuteFilter(query, kv.Key, kv.Value);
                     }
                 }
             }
