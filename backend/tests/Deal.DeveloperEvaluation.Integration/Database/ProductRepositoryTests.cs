@@ -120,5 +120,60 @@ namespace Deal.DeveloperEvaluation.Integration.Database
             var current = await repository.GetByIdAsync(product.Id);
             Assert.Equal(current!.Price.Value, updated!.Price.Value);
         }
+
+
+        [Fact(DisplayName = "Should return products by params")]
+        public async Task ListByFilterAsync_ShouldReturnProducts_WhenByParams()
+        {
+            using var scope = _factory.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<DefaultContext>();
+            var products = ProductFaker.GenerateFakeProducts(5);
+
+            await db.Products.AddRangeAsync(products, CancellationToken.None);
+            await db.SaveChangesAsync(CancellationToken.None);
+
+            var queryOptions = new QueryOptions
+            {
+                Filters = new Dictionary<string, object>
+                {
+                    { "Name", products.First().Name }
+                },
+                SortBy = string.Empty,
+                SortDescending = false
+            };
+            var repository = new ProductRepository(db);
+            var result = await repository.GetAsync(queryOptions);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Items);
+            Assert.Contains(result.Items, p => p.Name.Value == products.First().Name.Value);
+        }
+
+        [Fact(DisplayName = "Should return products with sort by")]
+        public async Task SortByAsync_ShouldReturnProducts_WhenSortBy()
+        {
+            using var scope = _factory.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<DefaultContext>();
+            var products = ProductFaker.GenerateFakeProducts(5);
+
+            await db.Products.AddRangeAsync(products, CancellationToken.None);
+            await db.SaveChangesAsync(CancellationToken.None);
+
+            var queryOptions = new QueryOptions
+            {
+                Filters = new Dictionary<string, object>
+                {
+                },
+                SortBy = "Code",
+                SortDescending = false
+            };
+            var repository = new ProductRepository(db);
+            var result = await repository.GetAsync(queryOptions);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Items);
+            var expected = products.OrderBy(p => p.Code.Value);
+            Assert.True(expected.Select(x => x.Id).SequenceEqual(result.Items.Select(x => x.Id)));
+        }
     }
 }
